@@ -591,40 +591,39 @@
   async function sendToLine() {
     showScreen('screen-sending');
 
-    // ── 構造化メッセージを構築 ──
-    const message = [
-      '【EditScore LINE連携】',
-      '---',
-      `タイプ: ${typeCode}`,
-      `経路: ${sourcePath}`,
-      `名前: ${userName}`,
-      `メール: ${userEmail}`,
-      `事業名: ${userBiz}`,
-      `LINE名: ${lineName}`,
-      '---',
-      '完全版レポートを準備しています...'
-    ].join('\n');
-
+    // LINEプロフィールからuserIdを取得
+    let lineUserId = '';
     try {
-      if (liff.isInClient()) {
-        await liff.sendMessages([
-          { type: 'text', text: message }
-        ]);
-      } else {
-        const lineUrl = `https://line.me/R/ti/p/${encodeURIComponent('@734klopj')}`;
-        sessionStorage.setItem('editscore_type', typeCode);
-        window.location.href = lineUrl;
-        return;
-      }
+      const profile = await liff.getProfile();
+      lineUserId = profile.userId || '';
+      lineName = profile.displayName || '';
+    } catch(e) {
+      console.warn('Profile fetch failed:', e);
+    }
+
+    // Make.com Webhookに直接送信
+    try {
+      await fetch('https://hook.us2.make.com/swb35pobqdsz7h2gj13neghlz2chappm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: typeCode,
+          source: sourcePath,
+          name: userName,
+          email: userEmail,
+          biz: userBiz,
+          lineName: lineName,
+          lineUserId: lineUserId
+        })
+      });
     } catch (err) {
-      console.error('sendMessages error:', err);
+      console.error('Webhook error:', err);
       showScreen('screen-main');
-      showError('メッセージの送信に失敗しました。もう一度お試しください。');
+      showError('送信に失敗しました。もう一度お試しください。');
       return;
     }
 
     showScreen('screen-success');
-
     if (liff.isInClient()) {
       setTimeout(() => liff.closeWindow(), 3000);
     }
