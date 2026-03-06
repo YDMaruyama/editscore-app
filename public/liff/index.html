@@ -1,73 +1,76 @@
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>EditScore — ブランド診断レポートを受け取る</title>
 
-  <!-- LIFF SDK -->　
+  <!-- LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts — match diagnostic tool -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── DESIGN TOKENS ─────────────────────────────────── */
+    /* ── DESIGN TOKENS (matching diagnostic tool) ──────── */
     :root {
-      --bg: #0a0a0f;
-      --surface: #111118;
-      --border: rgba(255,255,255,0.07);
-      --accent: #c8f542;        /* electric lime */
-      --accent-dim: rgba(200,245,66,0.12);
-      --accent-glow: rgba(200,245,66,0.35);
-      --text: #f0f0ef;
-      --text-sub: rgba(240,240,239,0.5);
+      --accent: #2563EB;
+      --accent-light: #EFF6FF;
+      --accent-mid: #DBEAFE;
+      --accent-dark: #1D4ED8;
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --border: #E2E8F0;
+      --border-light: #F1F5F9;
+      --text-primary: #0F172A;
+      --text-body: #374151;
+      --text-sub: #64748B;
+      --text-muted: #94A3B8;
+      --text-faint: #CBD5E1;
       --line-green: #06C755;
-      --radius: 18px;
+      --line-green-hover: #05B34C;
+      --success-bg: #F0FDF4;
+      --success-border: #BBF7D0;
+      --success-text: #166534;
+      --error-bg: #FEF2F2;
+      --error-border: #FECACA;
+      --error-text: #DC2626;
+      --radius: 16px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+      --shadow-lg: 0 10px 30px rgba(0,0,0,0.08);
       --transition: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     /* ── RESET ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
-      width: 100%; height: 100%;
+      width: 100%; min-height: 100%;
       background: var(--bg);
-      color: var(--text);
-      font-family: 'Zen Kaku Gothic New', sans-serif;
-      font-weight: 300;
+      color: var(--text-body);
+      font-family: 'Noto Sans JP', -apple-system, sans-serif;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.7;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
 
-    /* ── BACKGROUND MESH ───────────────────────────────── */
-    .bg-mesh {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(200,245,66,0.08) 0%, transparent 70%),
-        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(200,245,66,0.04) 0%, transparent 60%);
-    }
-    .bg-grid {
-      position: fixed; inset: 0; z-index: 0; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 48px 48px;
-    }
-
     /* ── LAYOUT ────────────────────────────────────────── */
     #app {
-      position: relative; z-index: 1;
       min-height: 100vh;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      padding: 32px 20px;
+      padding: 24px 16px;
     }
 
     /* ── SCREENS ───────────────────────────────────────── */
     .screen {
-      width: 100%; max-width: 400px;
-      opacity: 0; transform: translateY(16px);
+      width: 100%; max-width: 420px;
+      opacity: 0; transform: translateY(12px);
       transition: opacity 0.5s var(--transition), transform 0.5s var(--transition);
       pointer-events: none;
       display: none;
@@ -82,155 +85,173 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 40px 32px;
-      backdrop-filter: blur(20px);
+      padding: 36px 28px;
+      box-shadow: var(--shadow);
     }
 
     /* ── LOGO / BRAND ──────────────────────────────────── */
     .brand {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 28px;
+    }
+    .brand-icon {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 44px; height: 44px;
+      background: var(--accent);
+      border-radius: 10px;
+      margin-bottom: 12px;
+    }
+    .brand-icon svg {
+      width: 22px; height: 22px;
+      fill: #fff;
     }
     .brand-name {
-      font-family: 'DM Serif Display', serif;
-      font-size: 28px;
-      letter-spacing: 0.02em;
-      color: var(--text);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
     }
     .brand-name span {
       color: var(--accent);
     }
     .brand-sub {
       font-size: 11px;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--text-sub);
-      margin-top: 6px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 500;
     }
 
     /* ── TYPE BADGE ────────────────────────────────────── */
     .type-badge {
       display: inline-flex;
       align-items: center; justify-content: center;
-      background: var(--accent-dim);
-      border: 1px solid var(--accent-glow);
+      background: var(--accent-light);
+      border: 1px solid var(--accent-mid);
       color: var(--accent);
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      border-radius: 100px;
+      letter-spacing: 0.06em;
+      border-radius: 50px;
       padding: 5px 16px;
       margin-bottom: 20px;
     }
 
     /* ── HEADING ───────────────────────────────────────── */
     .heading {
-      font-family: 'DM Serif Display', serif;
-      font-size: 26px;
-      line-height: 1.35;
-      color: var(--text);
+      font-size: clamp(22px, 5vw, 26px);
+      font-weight: 700;
+      line-height: 1.45;
+      color: var(--text-primary);
       margin-bottom: 12px;
+      letter-spacing: -0.01em;
     }
     .heading em {
-      font-style: italic;
+      font-style: normal;
       color: var(--accent);
     }
     .body-text {
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.8;
       color: var(--text-sub);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     /* ── BENEFITS LIST ─────────────────────────────────── */
     .benefits {
       list-style: none;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 0;
     }
     .benefits li {
       display: flex;
       align-items: flex-start;
       gap: 12px;
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.6;
-      color: var(--text);
+      color: var(--text-body);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-light);
     }
-    .benefits li::before {
-      content: '';
-      display: block;
-      width: 6px; height: 6px;
-      min-width: 6px;
-      border-radius: 50%;
-      background: var(--accent);
-      margin-top: 7px;
+    .benefits li:last-child { border-bottom: none; }
+    .benefits li .check-icon {
+      width: 20px; height: 20px;
+      min-width: 20px;
+      background: var(--accent-light);
+      border-radius: 5px;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px;
+    }
+    .benefits li .check-icon svg {
+      width: 10px; height: 10px;
     }
 
     /* ── DIVIDER ───────────────────────────────────────── */
     .divider {
       width: 100%; height: 1px;
       background: var(--border);
-      margin: 24px 0;
+      margin: 20px 0;
     }
 
     /* ── BUTTONS ───────────────────────────────────────── */
     .btn-line {
       width: 100%;
       display: flex; align-items: center; justify-content: center;
-      gap: 12px;
+      gap: 10px;
       background: var(--line-green);
       color: #fff;
-      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-family: 'Noto Sans JP', sans-serif;
       font-size: 15px;
       font-weight: 700;
-      letter-spacing: 0.04em;
-      border: none; border-radius: 100px;
-      padding: 18px 24px;
+      letter-spacing: 0.02em;
+      border: none; border-radius: 12px;
+      padding: 16px 24px;
       cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 24px rgba(6,199,85,0.3);
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(6,199,85,0.25);
     }
     .btn-line:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(6,199,85,0.45);
+      background: var(--line-green-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(6,199,85,0.35);
     }
-    .btn-line:active { transform: translateY(0); }
-
+    .btn-line:active { transform: translateY(0); box-shadow: var(--shadow); }
     .btn-line svg {
-      width: 22px; height: 22px; flex-shrink: 0;
+      width: 20px; height: 20px; flex-shrink: 0;
     }
 
     /* ── LOADING SCREEN ────────────────────────────────── */
     .loader-wrap {
       text-align: center;
-      padding: 48px 0;
+      padding: 40px 0;
     }
     .loader {
-      width: 44px; height: 44px;
+      width: 40px; height: 40px;
       border: 3px solid var(--border);
       border-top-color: var(--accent);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin: 0 auto 20px;
+      margin: 0 auto 16px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loader-text {
       font-size: 13px;
-      color: var(--text-sub);
-      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
     }
 
     /* ── SUCCESS SCREEN ────────────────────────────────── */
     .success-icon {
-      width: 72px; height: 72px;
-      background: var(--accent-dim);
-      border: 2px solid var(--accent);
+      width: 64px; height: 64px;
+      background: var(--success-bg);
+      border: 2px solid var(--success-border);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 24px;
+      margin: 0 auto 20px;
       animation: pop 0.5s var(--transition);
     }
     @keyframes pop {
@@ -238,34 +259,35 @@
       to   { transform: scale(1);   opacity: 1; }
     }
     .success-icon svg {
-      width: 34px; height: 34px;
-      stroke: var(--accent);
+      width: 28px; height: 28px;
+      stroke: var(--success-text);
       stroke-width: 2.5;
     }
     .success-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 24px;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
       text-align: center;
       margin-bottom: 12px;
     }
     .success-body {
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.8;
       color: var(--text-sub);
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     /* ── ERROR STATE ───────────────────────────────────── */
     .error-text {
       font-size: 13px;
-      color: #ff6b6b;
+      color: var(--error-text);
       text-align: center;
-      margin-top: 16px;
-      padding: 12px 16px;
-      background: rgba(255,107,107,0.08);
-      border: 1px solid rgba(255,107,107,0.2);
-      border-radius: 10px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      border-radius: var(--radius-sm);
       display: none;
     }
     .error-text.show { display: block; }
@@ -273,17 +295,21 @@
     /* ── FOOTER NOTE ───────────────────────────────────── */
     .foot-note {
       font-size: 11px;
-      color: var(--text-sub);
+      color: var(--text-muted);
       text-align: center;
-      margin-top: 20px;
+      margin-top: 16px;
       line-height: 1.7;
-      opacity: 0.6;
+    }
+    .foot-note a {
+      color: var(--text-sub);
+      text-decoration: underline;
+      text-underline-offset: 2px;
     }
 
     /* ── STEP INDICATOR ────────────────────────────────── */
     .steps {
       display: flex; align-items: center; justify-content: center;
-      gap: 8px; margin-bottom: 32px;
+      gap: 8px; margin-bottom: 24px;
     }
     .step-dot {
       width: 8px; height: 8px;
@@ -293,12 +319,31 @@
     }
     .step-dot.active { background: var(--accent); }
     .step-dot.done   { background: var(--line-green); }
+
+    /* ── SECURE BADGE ──────────────────────────────────── */
+    .secure-badge {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px;
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .secure-badge svg {
+      width: 12px; height: 12px;
+      stroke: var(--text-muted);
+    }
+
+    /* ── COPYRIGHT ─────────────────────────────────────── */
+    .copyright {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 11px;
+      color: var(--text-faint);
+    }
   </style>
 </head>
 
 <body>
-  <div class="bg-mesh"></div>
-  <div class="bg-grid"></div>
 
   <div id="app">
 
@@ -306,8 +351,11 @@
     <div id="screen-loading" class="screen active">
       <div class="card">
         <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          </div>
           <div class="brand-name">Edit<span>Score</span></div>
-          <div class="brand-sub">Brand Diagnostic System</div>
+          <div class="brand-sub">Brand Diagnostic</div>
         </div>
         <div class="loader-wrap">
           <div class="loader"></div>
@@ -320,8 +368,11 @@
     <div id="screen-main" class="screen">
       <div class="card">
         <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          </div>
           <div class="brand-name">Edit<span>Score</span></div>
-          <div class="brand-sub">Brand Diagnostic System</div>
+          <div class="brand-sub">Brand Diagnostic</div>
         </div>
 
         <div class="steps">
@@ -342,13 +393,23 @@
         </p>
 
         <ul class="benefits">
-          <li>タイプ別ブランド戦略PDF（全12ページ）</li>
-          <li>リール台本テンプレート3本セット</li>
-          <li>フォロワーを引きつけるフック文例集</li>
-          <li>20日間ステップ配信でスキルを体系的に習得</li>
+          <li>
+            <span class="check-icon"><svg viewBox="0 0 9 9" fill="none"><path d="M1 4.5L3 6.5L8 1.5" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            タイプ別ブランド戦略PDF（全12ページ）
+          </li>
+          <li>
+            <span class="check-icon"><svg viewBox="0 0 9 9" fill="none"><path d="M1 4.5L3 6.5L8 1.5" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            リール台本テンプレート3本セット
+          </li>
+          <li>
+            <span class="check-icon"><svg viewBox="0 0 9 9" fill="none"><path d="M1 4.5L3 6.5L8 1.5" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            フォロワーを引きつけるフック文例集
+          </li>
+          <li>
+            <span class="check-icon"><svg viewBox="0 0 9 9" fill="none"><path d="M1 4.5L3 6.5L8 1.5" stroke="#2563EB" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            20日間ステップ配信でスキルを体系的に習得
+          </li>
         </ul>
-
-        <div class="divider"></div>
 
         <button class="btn-line" id="btn-login">
           <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -361,19 +422,27 @@
           エラーが発生しました。ページを再読み込みしてお試しください。
         </div>
 
+        <div class="secure-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          LINEアカウントで安全にログイン
+        </div>
+
         <p class="foot-note">
-          LINEアカウントでログインするだけ。<br>
-          個人情報の取り扱いは<a href="#" style="color:var(--text-sub)">プライバシーポリシー</a>をご確認ください。
+          個人情報の取り扱いは<a href="#">プライバシーポリシー</a>をご確認ください。
         </p>
       </div>
+      <p class="copyright">© EditScore</p>
     </div>
 
     <!-- ③ SENDING ───────────────────────────────────────── -->
     <div id="screen-sending" class="screen">
       <div class="card">
         <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+          </div>
           <div class="brand-name">Edit<span>Score</span></div>
-          <div class="brand-sub">Brand Diagnostic System</div>
+          <div class="brand-sub">Brand Diagnostic</div>
         </div>
         <div class="steps">
           <div class="step-dot done"></div>
@@ -408,17 +477,18 @@
           Reels攻略ヒントが届きます 🎬
         </p>
       </div>
+      <p class="copyright">© EditScore</p>
     </div>
 
   </div><!-- #app -->
 
   <script>
   // ════════════════════════════════════════════════════════
-  //  CONFIG — Vercelの環境変数、またはここに直接記入
+  //  CONFIG
   // ════════════════════════════════════════════════════════
   const LIFF_ID = (
     typeof process !== 'undefined' && process.env && process.env.LIFF_ID
-  ) || 'YOUR_LIFF_ID_HERE';  // ← LINE DevelopersのLIFF IDに変更
+  ) || 'YOUR_LIFF_ID_HERE';
 
   // ════════════════════════════════════════════════════════
   //  STATE
@@ -431,7 +501,6 @@
   function getParam(key) {
     const url   = new URL(window.location.href);
     const value = url.searchParams.get(key);
-    // LIFF sometimes moves params after #
     if (!value) {
       const hash = url.hash.replace('#', '');
       const hp   = new URLSearchParams(hash);
@@ -447,7 +516,6 @@
     });
     const el = document.getElementById(id);
     el.style.display = 'block';
-    // Force reflow for transition
     requestAnimationFrame(() => el.classList.add('active'));
   }
 
@@ -458,7 +526,6 @@
   }
 
   function formatTypeLabel(code) {
-    // e.g. "INNOVATOR" → "TYPE: INNOVATOR"
     const map = {
       'INNOVATOR':   'イノベーター型',
       'EDUCATOR':    'エデュケーター型',
@@ -468,7 +535,6 @@
       'ACTIVIST':    'アクティビスト型',
       'CREATOR':     'クリエーター型',
       'CONNECTOR':   'コネクター型',
-      // 8タイプ × 2 = 16 (例: A/Bバリアント)
     };
     const clean   = code.replace(/_[AB]$/i, '');
     const variant = code.match(/_([AB])$/i) ? code.match(/_([AB])$/i)[1] : '';
@@ -480,10 +546,8 @@
   //  MAIN
   // ════════════════════════════════════════════════════════
   async function main() {
-    // ── 1. タイプコードをURLから取得 ──────────────────────
     typeCode = getParam('type') || getParam('t') || 'UNKNOWN';
 
-    // ── 2. LIFFを初期化 ───────────────────────────────────
     try {
       await liff.init({ liffId: LIFF_ID });
     } catch (err) {
@@ -493,18 +557,15 @@
       return;
     }
 
-    // ── 3. ログインチェック ──────────────────────────────
     if (!liff.isLoggedIn()) {
       liff.login({ redirectUri: window.location.href });
-      return; // redirect happens
+      return;
     }
 
-    // ── 4. UIを更新してメイン画面へ ──────────────────────
     const typeEl = document.getElementById('type-label');
     if (typeEl) typeEl.textContent = formatTypeLabel(typeCode);
     showScreen('screen-main');
 
-    // ── 5. ボタンイベント ─────────────────────────────────
     document.getElementById('btn-login').addEventListener('click', sendToLine);
   }
 
@@ -512,7 +573,6 @@
     showScreen('screen-sending');
 
     try {
-      // ── LIFF内ブラウザでのみ sendMessages が使える ──────
       if (liff.isInClient()) {
         await liff.sendMessages([
           {
@@ -521,10 +581,7 @@
           }
         ]);
       } else {
-        // 外部ブラウザの場合: LINE公式アカウントを開く
-        // Webhookはfriend add時に発動する
         const lineUrl = `https://line.me/R/ti/p/${encodeURIComponent('YOUR_LINE_OFFICIAL_ACCOUNT_ID')}`;
-        // タイプコードをセッションストレージへ（友だち追加後のWebhookで処理）
         sessionStorage.setItem('editscore_type', typeCode);
         window.location.href = lineUrl;
         return;
@@ -538,7 +595,6 @@
 
     showScreen('screen-success');
 
-    // 3秒後に自動でLINEへ戻る（LIFF内の場合）
     if (liff.isInClient()) {
       setTimeout(() => liff.closeWindow(), 3000);
     }
