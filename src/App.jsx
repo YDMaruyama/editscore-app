@@ -5,20 +5,9 @@ const AL = "#EFF6FF";
 const AM = "#DBEAFE";
 
 // ▼ 設定項目 — 実際のURLに差し替えてください
-const MAKE_WEBHOOK = "https://hook.us2.make.com/1tjy4p8nafmgg5evcmq89f369a59lrbu";
-const WEBINAR_URL = "https://editscore.jp/webinar"; // ウェビナー申込ページURL
-
-// 業種マッピング: フロント表示名 → Notionセレクト値
-const INDUSTRY_TO_NOTION = {
-  coaching:    "コンサル",
-  beauty:      "美容",
-  ec:          "EC・物販",
-  food:        "飲食",
-  education:   "教育",
-  realestate:  "不動産",
-  freelance:   "その他",
-  other:       "その他",
-};
+const N8N_WEBHOOK = "https://YOUR_N8N_WEBHOOK_URL/webhook/editscore"; // n8n Webhook URL
+const WEBINAR_URL = "https://YOUR_WEBINAR_REGISTRATION_URL"; // ウェビナー申込ページURL
+const LIFF_URL = "https://liff.line.me/2009318162-SODj4Xe8"; // LIFF URL（LINE連携）
 
 const INDUSTRIES = [
   { id:"coaching", label:"コーチング・コンサル", icon:"💼" },
@@ -417,9 +406,7 @@ export default function EditScoreDiagnostic() {
       if (!regName.trim() || !regEmail.trim()) { setRegError("お名前とメールアドレスは必須です"); return; }
       if (!/\S+@\S+\.\S+/.test(regEmail)) { setRegError("有効なメールアドレスを入力してください"); return; }
       setRegError(""); setRegLoading(true);
-      // Notionフィールド名と完全一致させたペイロード（MakeがそのままNotion連携可能）
-      const today = new Date();
-      const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+      // Notionフィールド名と完全一致させたペイロード（n8nがそのままマッピング可能）
       const payload = {
         顧客名:         regName,
         メールアドレス:   regEmail,
@@ -427,13 +414,15 @@ export default function EditScoreDiagnostic() {
         診断タイプコード:  code,
         診断タイプ名:    data.name,
         診断タイプ漢字:  data.kanji,
-        業種:           INDUSTRY_TO_NOTION[industry || "other"] || "その他",
+        業種:           ind.label,          // Notion選択肢と完全一致
         強み:           data.strengths.join(" / "),
         最適リール型:    data.types[0].name,
-        申込日時:        dateStr,
-        ウェビナーURL:   WEBINAR_URL,
+        申込日時:        new Date().toISOString(),
+        進捗:           "1_ウェビナー申込",  // 初期ステータスを自動セット
+        "ウェビナー参加ステータス": "申込済",
+        "メール送信済み": false,
       };
-      try { await fetch(MAKE_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) }); }
+      try { await fetch(N8N_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) }); }
       catch(e) { /* Notion保存失敗でも体験継続 */ }
       setRegLoading(false); setRegDone(true);
       setTimeout(() => window.open(WEBINAR_URL, "_blank"), 600);
@@ -679,6 +668,40 @@ export default function EditScoreDiagnostic() {
               ))}
               <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"10px" }}>※ マイクロ×1〜2名 ＋ 中型×1名を参考にするのがおすすめです</p>
             </div>
+          </div>
+
+          {/* CTA → LINE レポート受取 */}
+          <div style={{ ...card, padding:"36px 32px", textAlign:"center", marginBottom:"16px", borderTop:`4px solid #06C755`, background:"linear-gradient(135deg,#F0FDF4,#fff)" }}>
+            <div style={{ display:"inline-block", background:"#DCFCE7", color:"#166534", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"16px", letterSpacing:"0.06em" }}>📩 完全版レポートを受け取る</div>
+            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>あなたのタイプ別<br/>戦略PDFとリール台本を<br/>LINEで今すぐ受け取る</h3>
+            <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#64748B", marginBottom:"20px" }}>
+              「{data.name}」専用のブランド戦略PDF（全12ページ）と<br/>
+              リール台本テンプレート3本セットをお届けします。
+            </p>
+            <div style={{ display:"flex", gap:"10px", justifyContent:"center", flexWrap:"wrap", marginBottom:"20px" }}>
+              {["タイプ別戦略PDF","リール台本3本","20日間ステップ配信"].map((t,i) => (
+                <span key={i} style={{ fontSize:"12px", fontWeight:"600", color:"#166534", background:"#DCFCE7", padding:"5px 14px", borderRadius:"50px" }}>✓ {t}</span>
+              ))}
+            </div>
+            <button style={{ ...btn, padding:"16px 48px", fontSize:"15px", background:"#06C755", width:"100%", maxWidth:"380px", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", margin:"0 auto" }}
+              onClick={() => {
+                const { code, data } = result;
+                const ind = IND[industry] || IND.other;
+                const params = new URLSearchParams({
+                  type: data.kanji || code,
+                  source: 'diagnosis',
+                  name: regName || '',
+                  email: regEmail || '',
+                  biz: regBiz || ''
+                });
+                window.open(`${LIFF_URL}?${params.toString()}`, '_blank');
+              }}
+              onMouseOver={e=>e.currentTarget.style.background="#05B34C"}
+              onMouseOut={e=>e.currentTarget.style.background="#06C755"}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.05 2 11.07c0 4.46 3.61 8.19 8.49 8.87.33.07.78.22.89.5.1.26.07.66.03.93l-.14.87c-.04.26-.2 1.03.9.56 1.11-.47 5.96-3.5 8.13-6 1.5-1.64 2.22-3.31 2.22-5.13C22.52 6.05 18.04 2 12 2z"/></svg>
+              LINEで無料受け取る →
+            </button>
+            <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>LINEアカウントでログインするだけ・無料</p>
           </div>
 
           {/* CTA → Webinar */}
