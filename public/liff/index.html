@@ -486,14 +486,17 @@
   // ════════════════════════════════════════════════════════
   //  CONFIG
   // ════════════════════════════════════════════════════════
-  const LIFF_ID = (
-    typeof process !== 'undefined' && process.env && process.env.LIFF_ID
-  ) || '2009318162-SODj4Xe8';
+  const LIFF_ID = '2009318162-SODj4Xe8';
 
   // ════════════════════════════════════════════════════════
   //  STATE
   // ════════════════════════════════════════════════════════
   let typeCode = '';
+  let sourcePath = '';
+  let userName = '';
+  let userEmail = '';
+  let userBiz = '';
+  let lineName = '';
 
   // ════════════════════════════════════════════════════════
   //  UTILS
@@ -546,8 +549,14 @@
   //  MAIN
   // ════════════════════════════════════════════════════════
   async function main() {
-    typeCode = getParam('type') || getParam('t') || 'UNKNOWN';
+    // ── 1. URLパラメータを全て取得 ──
+    typeCode   = getParam('type') || getParam('t') || 'UNKNOWN';
+    sourcePath = getParam('source') || 'diagnosis';
+    userName   = getParam('name') || '';
+    userEmail  = getParam('email') || '';
+    userBiz    = getParam('biz') || '';
 
+    // ── 2. LIFF初期化 ──
     try {
       await liff.init({ liffId: LIFF_ID });
     } catch (err) {
@@ -557,11 +566,21 @@
       return;
     }
 
+    // ── 3. ログインチェック ──
     if (!liff.isLoggedIn()) {
       liff.login({ redirectUri: window.location.href });
       return;
     }
 
+    // ── 4. LINEプロフィール取得 ──
+    try {
+      const profile = await liff.getProfile();
+      lineName = profile.displayName || '';
+    } catch (e) {
+      console.warn('Profile fetch failed:', e);
+    }
+
+    // ── 5. UI更新 ──
     const typeEl = document.getElementById('type-label');
     if (typeEl) typeEl.textContent = formatTypeLabel(typeCode);
     showScreen('screen-main');
@@ -572,13 +591,24 @@
   async function sendToLine() {
     showScreen('screen-sending');
 
+    // ── 構造化メッセージを構築 ──
+    const message = [
+      '【EditScore LINE連携】',
+      '---',
+      `タイプ: ${typeCode}`,
+      `経路: ${sourcePath}`,
+      `名前: ${userName}`,
+      `メール: ${userEmail}`,
+      `事業名: ${userBiz}`,
+      `LINE名: ${lineName}`,
+      '---',
+      '完全版レポートを準備しています...'
+    ].join('\n');
+
     try {
       if (liff.isInClient()) {
         await liff.sendMessages([
-          {
-            type: 'text',
-            text: `__EDITSCORE_TYPE__:${typeCode}`
-          }
+          { type: 'text', text: message }
         ]);
       } else {
         const lineUrl = `https://line.me/R/ti/p/${encodeURIComponent('@734klopj')}`;
