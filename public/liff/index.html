@@ -8,18 +8,16 @@
   <!-- LIFF SDK -->
   <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
-  <!-- Google Fonts — match diagnostic tool -->
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet" />
 
   <style>
-    /* ── DESIGN TOKENS (matching diagnostic tool) ──────── */
     :root {
       --accent: #2563EB;
       --accent-light: #EFF6FF;
       --accent-mid: #DBEAFE;
-      --accent-dark: #1D4ED8;
       --bg: #F8FAFC;
       --surface: #FFFFFF;
       --border: #E2E8F0;
@@ -40,12 +38,9 @@
       --radius: 16px;
       --radius-sm: 8px;
       --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
-      --shadow-lg: 0 10px 30px rgba(0,0,0,0.08);
       --transition: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* ── RESET ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%; min-height: 100%;
@@ -59,7 +54,6 @@
       overflow-x: hidden;
     }
 
-    /* ── LAYOUT ────────────────────────────────────────── */
     #app {
       min-height: 100vh;
       display: flex; flex-direction: column;
@@ -67,7 +61,6 @@
       padding: 24px 16px;
     }
 
-    /* ── SCREENS ───────────────────────────────────────── */
     .screen {
       width: 100%; max-width: 420px;
       opacity: 0; transform: translateY(12px);
@@ -80,7 +73,6 @@
       pointer-events: auto; display: block;
     }
 
-    /* ── CARD ──────────────────────────────────────────── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -89,11 +81,7 @@
       box-shadow: var(--shadow);
     }
 
-    /* ── LOGO / BRAND ──────────────────────────────────── */
-    .brand {
-      text-align: center;
-      margin-bottom: 28px;
-    }
+    .brand { text-align: center; margin-bottom: 28px; }
     .brand-icon {
       display: inline-flex;
       align-items: center; justify-content: center;
@@ -102,115 +90,71 @@
       border-radius: 10px;
       margin-bottom: 12px;
     }
-    .brand-icon svg {
-      width: 22px; height: 22px;
-      fill: #fff;
-    }
+    .brand-icon svg { width: 22px; height: 22px; fill: #fff; }
     .brand-name {
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
+      font-size: 22px; font-weight: 700;
+      letter-spacing: -0.02em; color: var(--text-primary);
     }
-    .brand-name span {
-      color: var(--accent);
-    }
+    .brand-name span { color: var(--accent); }
     .brand-sub {
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-weight: 500;
+      font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--text-muted);
+      margin-top: 4px; font-weight: 500;
     }
 
-    /* ── TYPE BADGE ────────────────────────────────────── */
     .type-badge {
       display: inline-flex;
       align-items: center; justify-content: center;
       background: var(--accent-light);
       border: 1px solid var(--accent-mid);
       color: var(--accent);
-      font-size: 12px;
-      font-weight: 700;
+      font-size: 12px; font-weight: 700;
       letter-spacing: 0.06em;
       border-radius: 50px;
       padding: 5px 16px;
       margin-bottom: 20px;
     }
 
-    /* ── HEADING ───────────────────────────────────────── */
     .heading {
       font-size: clamp(22px, 5vw, 26px);
-      font-weight: 700;
-      line-height: 1.45;
+      font-weight: 700; line-height: 1.45;
       color: var(--text-primary);
       margin-bottom: 12px;
       letter-spacing: -0.01em;
     }
-    .heading em {
-      font-style: normal;
-      color: var(--accent);
-    }
+    .heading em { font-style: normal; color: var(--accent); }
+
     .body-text {
-      font-size: 13px;
-      line-height: 1.8;
-      color: var(--text-sub);
-      margin-bottom: 24px;
+      font-size: 13px; line-height: 1.8;
+      color: var(--text-sub); margin-bottom: 24px;
     }
 
-    /* ── BENEFITS LIST ─────────────────────────────────── */
-    .benefits {
-      list-style: none;
-      margin-bottom: 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
+    .benefits { list-style: none; margin-bottom: 28px; display: flex; flex-direction: column; gap: 0; }
     .benefits li {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-size: 13px;
-      line-height: 1.6;
-      color: var(--text-body);
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: flex-start; gap: 12px;
+      font-size: 13px; line-height: 1.6; color: var(--text-body);
+      padding: 10px 0; border-bottom: 1px solid var(--border-light);
     }
     .benefits li:last-child { border-bottom: none; }
     .benefits li .check-icon {
-      width: 20px; height: 20px;
-      min-width: 20px;
-      background: var(--accent-light);
-      border-radius: 5px;
+      width: 20px; height: 20px; min-width: 20px;
+      background: var(--accent-light); border-radius: 5px;
       display: flex; align-items: center; justify-content: center;
       margin-top: 1px;
     }
-    .benefits li .check-icon svg {
-      width: 10px; height: 10px;
-    }
+    .benefits li .check-icon svg { width: 10px; height: 10px; }
 
-    /* ── DIVIDER ───────────────────────────────────────── */
-    .divider {
-      width: 100%; height: 1px;
-      background: var(--border);
-      margin: 20px 0;
-    }
+    .divider { width: 100%; height: 1px; background: var(--border); margin: 20px 0; }
 
-    /* ── BUTTONS ───────────────────────────────────────── */
     .btn-line {
       width: 100%;
       display: flex; align-items: center; justify-content: center;
       gap: 10px;
-      background: var(--line-green);
-      color: #fff;
+      background: var(--line-green); color: #fff;
       font-family: 'Noto Sans JP', sans-serif;
-      font-size: 15px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
       border: none; border-radius: 12px;
-      padding: 16px 24px;
-      cursor: pointer;
+      padding: 16px 24px; cursor: pointer;
       transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
       box-shadow: 0 2px 8px rgba(6,199,85,0.25);
     }
@@ -220,15 +164,9 @@
       box-shadow: 0 4px 16px rgba(6,199,85,0.35);
     }
     .btn-line:active { transform: translateY(0); box-shadow: var(--shadow); }
-    .btn-line svg {
-      width: 20px; height: 20px; flex-shrink: 0;
-    }
+    .btn-line svg { width: 20px; height: 20px; flex-shrink: 0; }
 
-    /* ── LOADING SCREEN ────────────────────────────────── */
-    .loader-wrap {
-      text-align: center;
-      padding: 40px 0;
-    }
+    .loader-wrap { text-align: center; padding: 40px 0; }
     .loader {
       width: 40px; height: 40px;
       border: 3px solid var(--border);
@@ -238,13 +176,8 @@
       margin: 0 auto 16px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .loader-text {
-      font-size: 13px;
-      color: var(--text-muted);
-      letter-spacing: 0.04em;
-    }
+    .loader-text { font-size: 13px; color: var(--text-muted); letter-spacing: 0.04em; }
 
-    /* ── SUCCESS SCREEN ────────────────────────────────── */
     .success-icon {
       width: 64px; height: 64px;
       background: var(--success-bg);
@@ -258,96 +191,40 @@
       from { transform: scale(0.6); opacity: 0; }
       to   { transform: scale(1);   opacity: 1; }
     }
-    .success-icon svg {
-      width: 28px; height: 28px;
-      stroke: var(--success-text);
-      stroke-width: 2.5;
-    }
-    .success-title {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text-primary);
-      text-align: center;
-      margin-bottom: 12px;
-    }
-    .success-body {
-      font-size: 13px;
-      line-height: 1.8;
-      color: var(--text-sub);
-      text-align: center;
-      margin-bottom: 24px;
-    }
+    .success-icon svg { width: 28px; height: 28px; stroke: var(--success-text); stroke-width: 2.5; }
+    .success-title { font-size: 22px; font-weight: 700; color: var(--text-primary); text-align: center; margin-bottom: 12px; }
+    .success-body { font-size: 13px; line-height: 1.8; color: var(--text-sub); text-align: center; margin-bottom: 24px; }
 
-    /* ── ERROR STATE ───────────────────────────────────── */
     .error-text {
-      font-size: 13px;
-      color: var(--error-text);
-      text-align: center;
-      margin-top: 14px;
-      padding: 10px 14px;
-      background: var(--error-bg);
-      border: 1px solid var(--error-border);
-      border-radius: var(--radius-sm);
-      display: none;
+      font-size: 13px; color: var(--error-text); text-align: center;
+      margin-top: 14px; padding: 10px 14px;
+      background: var(--error-bg); border: 1px solid var(--error-border);
+      border-radius: var(--radius-sm); display: none;
     }
     .error-text.show { display: block; }
 
-    /* ── FOOTER NOTE ───────────────────────────────────── */
-    .foot-note {
-      font-size: 11px;
-      color: var(--text-muted);
-      text-align: center;
-      margin-top: 16px;
-      line-height: 1.7;
-    }
-    .foot-note a {
-      color: var(--text-sub);
-      text-decoration: underline;
-      text-underline-offset: 2px;
-    }
+    .foot-note { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 16px; line-height: 1.7; }
+    .foot-note a { color: var(--text-sub); text-decoration: underline; text-underline-offset: 2px; }
 
-    /* ── STEP INDICATOR ────────────────────────────────── */
-    .steps {
-      display: flex; align-items: center; justify-content: center;
-      gap: 8px; margin-bottom: 24px;
-    }
-    .step-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--border);
-      transition: background 0.3s;
-    }
+    .steps { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 24px; }
+    .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.3s; }
     .step-dot.active { background: var(--accent); }
     .step-dot.done   { background: var(--line-green); }
 
-    /* ── SECURE BADGE ──────────────────────────────────── */
     .secure-badge {
       display: flex; align-items: center; justify-content: center;
-      gap: 6px;
-      margin-top: 20px;
-      font-size: 11px;
-      color: var(--text-muted);
+      gap: 6px; margin-top: 20px; font-size: 11px; color: var(--text-muted);
     }
-    .secure-badge svg {
-      width: 12px; height: 12px;
-      stroke: var(--text-muted);
-    }
+    .secure-badge svg { width: 12px; height: 12px; stroke: var(--text-muted); }
 
-    /* ── COPYRIGHT ─────────────────────────────────────── */
-    .copyright {
-      text-align: center;
-      margin-top: 24px;
-      font-size: 11px;
-      color: var(--text-faint);
-    }
+    .copyright { text-align: center; margin-top: 24px; font-size: 11px; color: var(--text-faint); }
   </style>
 </head>
 
 <body>
-
   <div id="app">
 
-    <!-- ① LOADING ─────────────────────────────────────── -->
+    <!-- LOADING -->
     <div id="screen-loading" class="screen active">
       <div class="card">
         <div class="brand">
@@ -359,12 +236,12 @@
         </div>
         <div class="loader-wrap">
           <div class="loader"></div>
-          <div class="loader-text">準備中…</div>
+          <div class="loader-text">LINE連携を準備中...</div>
         </div>
       </div>
     </div>
 
-    <!-- ② MAIN CTA ─────────────────────────────────────── -->
+    <!-- MAIN CTA -->
     <div id="screen-main" class="screen">
       <div class="card">
         <div class="brand">
@@ -376,13 +253,13 @@
         </div>
 
         <div class="steps">
-          <div class="step-dot active" id="dot1"></div>
-          <div class="step-dot" id="dot2"></div>
-          <div class="step-dot" id="dot3"></div>
+          <div class="step-dot active"></div>
+          <div class="step-dot"></div>
+          <div class="step-dot"></div>
         </div>
 
-        <div id="type-badge-wrap" style="text-align:center">
-          <span class="type-badge" id="type-label">TYPE: ——</span>
+        <div style="text-align:center">
+          <span class="type-badge" id="type-label">TYPE: --</span>
         </div>
 
         <h1 class="heading">
@@ -411,16 +288,14 @@
           </li>
         </ul>
 
-        <button class="btn-line" id="btn-login">
+        <button class="btn-line" id="btn-send">
           <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2C6.48 2 2 6.05 2 11.07c0 4.46 3.61 8.19 8.49 8.87.33.07.78.22.89.5.1.26.07.66.03.93l-.14.87c-.04.26-.2 1.03.9.56 1.11-.47 5.96-3.5 8.13-6 1.5-1.64 2.22-3.31 2.22-5.13C22.52 6.05 18.04 2 12 2z"/>
           </svg>
           LINEで無料受け取る
         </button>
 
-        <div id="error-msg" class="error-text">
-          エラーが発生しました。ページを再読み込みしてお試しください。
-        </div>
+        <div id="error-msg" class="error-text"></div>
 
         <div class="secure-badge">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
@@ -431,10 +306,10 @@
           個人情報の取り扱いは<a href="#">プライバシーポリシー</a>をご確認ください。
         </p>
       </div>
-      <p class="copyright">© EditScore</p>
+      <p class="copyright">&copy; EditScore</p>
     </div>
 
-    <!-- ③ SENDING ───────────────────────────────────────── -->
+    <!-- SENDING -->
     <div id="screen-sending" class="screen">
       <div class="card">
         <div class="brand">
@@ -447,16 +322,16 @@
         <div class="steps">
           <div class="step-dot done"></div>
           <div class="step-dot active"></div>
-          <div class="step-dot" id="dot3b"></div>
+          <div class="step-dot"></div>
         </div>
         <div class="loader-wrap">
           <div class="loader"></div>
-          <div class="loader-text">レポートを送信しています…</div>
+          <div class="loader-text">レポートを送信しています...</div>
         </div>
       </div>
     </div>
 
-    <!-- ④ SUCCESS ───────────────────────────────────────── -->
+    <!-- SUCCESS -->
     <div id="screen-success" class="screen">
       <div class="card">
         <div class="success-icon">
@@ -464,7 +339,7 @@
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
         </div>
-        <h2 class="success-title">送信完了！</h2>
+        <h2 class="success-title">送信完了!</h2>
         <p class="success-body">
           LINEにブランド診断レポートと<br>
           スクリプトテンプレートをお送りしました。<br><br>
@@ -474,42 +349,58 @@
         <div class="divider"></div>
         <p class="foot-note" style="opacity:1; color: var(--text-sub);">
           今後20日間、毎晩20:00に<br>
-          Reels攻略ヒントが届きます 🎬
+          Reels攻略ヒントが届きます
         </p>
       </div>
-      <p class="copyright">© EditScore</p>
+      <p class="copyright">&copy; EditScore</p>
     </div>
 
-  </div><!-- #app -->
+  </div>
 
   <script>
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   //  CONFIG
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   const LIFF_ID = '2009318162-SODj4Xe8';
+  const WEBHOOK_URL = 'https://hook.us2.make.com/swb35pobqdsz7h2gj13neghlz2chappm';
 
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   //  STATE
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   let typeCode = '';
   let sourcePath = '';
   let userName = '';
   let userEmail = '';
   let userBiz = '';
   let lineName = '';
+  let lineUserId = '';
 
-  // ════════════════════════════════════════════════════════
+  // 16 type kanji map
+  const TYPE_NAMES = {
+    '華': 'カリスマ・クリエイター',
+    '風': 'ナラティブ・ポエト',
+    '炎': 'パッション・セラー',
+    '泉': 'エモーショナル・キュレーター',
+    '語': 'ストーリーテラー',
+    '灯': 'エッセイスト',
+    '導': 'メンター・ガイド',
+    '絆': 'コミュニティ・ビルダー',
+    '匠': 'クラフト・アーティスト',
+    '美': 'ビジュアル・アーキテクト',
+    '鏡': 'レビュー・マスター',
+    '刃': 'データ・ストラテジスト',
+    '賢': 'エキスパート・ティーチャー',
+    '智': 'ナレッジ・キュレーター',
+    '剣': 'クロージング・プロ',
+    '盾': 'グロース・エンジニア'
+  };
+
+  // ================================================================
   //  UTILS
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   function getParam(key) {
-    const url   = new URL(window.location.href);
-    const value = url.searchParams.get(key);
-    if (!value) {
-      const hash = url.hash.replace('#', '');
-      const hp   = new URLSearchParams(hash);
-      return hp.get(key) || '';
-    }
-    return value || '';
+    const url = new URL(window.location.href);
+    return url.searchParams.get(key) || '';
   }
 
   function showScreen(id) {
@@ -518,8 +409,10 @@
       el.style.display = 'none';
     });
     const el = document.getElementById(id);
-    el.style.display = 'block';
-    requestAnimationFrame(() => el.classList.add('active'));
+    if (el) {
+      el.style.display = 'block';
+      requestAnimationFrame(() => el.classList.add('active'));
+    }
   }
 
   function showError(msg) {
@@ -528,94 +421,89 @@
     el.classList.add('show');
   }
 
-  function formatTypeLabel(code) {
-    const map = {
-      'INNOVATOR':   'イノベーター型',
-      'EDUCATOR':    'エデュケーター型',
-      'ENTERTAINER': 'エンターテイナー型',
-      'CURATOR':     'キュレーター型',
-      'STORYTELLER': 'ストーリーテラー型',
-      'ACTIVIST':    'アクティビスト型',
-      'CREATOR':     'クリエーター型',
-      'CONNECTOR':   'コネクター型',
-    };
-    const clean   = code.replace(/_[AB]$/i, '');
-    const variant = code.match(/_([AB])$/i) ? code.match(/_([AB])$/i)[1] : '';
-    const label   = map[clean.toUpperCase()] || clean;
-    return `${label}${variant ? ' ' + variant : ''}`;
+  function hideError() {
+    const el = document.getElementById('error-msg');
+    el.classList.remove('show');
   }
 
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   //  MAIN
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   async function main() {
-    // ── 1. URLパラメータを全て取得 ──
-    typeCode   = getParam('type') || getParam('t') || 'UNKNOWN';
+    // Read URL parameters from diagnostic tool
+    typeCode   = getParam('type')   || '';
     sourcePath = getParam('source') || 'diagnosis';
-    userName   = getParam('name') || '';
-    userEmail  = getParam('email') || '';
-    userBiz    = getParam('biz') || '';
+    userName   = getParam('name')   || '';
+    userEmail  = getParam('email')  || '';
+    userBiz    = getParam('biz')    || '';
 
-    // ── 2. LIFF初期化 ──
+    // Update type badge
+    const typeEl = document.getElementById('type-label');
+    if (typeEl && typeCode) {
+      const typeName = TYPE_NAMES[typeCode] || typeCode;
+      typeEl.textContent = `TYPE: ${typeCode} ${typeName}`;
+    }
+
+    // Initialize LIFF
     try {
       await liff.init({ liffId: LIFF_ID });
     } catch (err) {
       console.error('LIFF init error:', err);
       showScreen('screen-main');
-      showError('LIFFの初期化に失敗しました。');
+      showError('LIFFの初期化に失敗しました。ページを再読み込みしてください。');
       return;
     }
 
-    // ── 3. ログインチェック ──
+    // If not logged in, redirect to LINE Login
     if (!liff.isLoggedIn()) {
       liff.login({ redirectUri: window.location.href });
       return;
     }
 
-    // ── 4. LINEプロフィール取得 ──
+    // Get LINE profile
     try {
       const profile = await liff.getProfile();
+      lineUserId = profile.userId || '';
       lineName = profile.displayName || '';
     } catch (e) {
       console.warn('Profile fetch failed:', e);
     }
 
-    // ── 5. UI更新 ──
-    const typeEl = document.getElementById('type-label');
-    if (typeEl) typeEl.textContent = formatTypeLabel(typeCode);
     showScreen('screen-main');
 
-    document.getElementById('btn-login').addEventListener('click', sendToLine);
+    // Attach click handler
+    document.getElementById('btn-send').addEventListener('click', sendToLine);
   }
 
+  // ================================================================
+  //  SEND TO MAKE.COM WEBHOOK
+  // ================================================================
   async function sendToLine() {
+    hideError();
     showScreen('screen-sending');
 
-    // LINEプロフィールからuserIdを取得
-    let lineUserId = '';
-    try {
-      const profile = await liff.getProfile();
-      lineUserId = profile.userId || '';
-      lineName = profile.displayName || '';
-    } catch(e) {
-      console.warn('Profile fetch failed:', e);
-    }
+    const payload = {
+      type:       typeCode,
+      source:     sourcePath,
+      name:       userName,
+      email:      userEmail,
+      biz:        userBiz,
+      lineName:   lineName,
+      lineUserId: lineUserId
+    };
 
-    // Make.com Webhookに直接送信
+    console.log('Sending payload:', JSON.stringify(payload));
+
     try {
-      await fetch('https://hook.us2.make.com/swb35pobqdsz7h2gj13neghlz2chappm', {
+      const res = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: typeCode,
-          source: sourcePath,
-          name: userName,
-          email: userEmail,
-          biz: userBiz,
-          lineName: lineName,
-          lineUserId: lineUserId
-        })
+        body: JSON.stringify(payload)
       });
+
+      if (!res.ok) {
+        throw new Error('Webhook returned ' + res.status);
+      }
     } catch (err) {
       console.error('Webhook error:', err);
       showScreen('screen-main');
@@ -623,15 +511,20 @@
       return;
     }
 
+    // Success
     showScreen('screen-success');
+
+    // Auto-close LIFF window after 3 seconds (only inside LINE app)
     if (liff.isInClient()) {
-      setTimeout(() => liff.closeWindow(), 3000);
+      setTimeout(() => {
+        try { liff.closeWindow(); } catch(e) { /* ignore */ }
+      }, 3000);
     }
   }
 
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   //  BOOT
-  // ════════════════════════════════════════════════════════
+  // ================================================================
   document.addEventListener('DOMContentLoaded', main);
   </script>
 </body>
