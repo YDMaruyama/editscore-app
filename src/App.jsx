@@ -505,11 +505,12 @@ export default function EditScoreDiagnostic() {
     const guide = data.influencerGuide;
     const shareText = `【私のリール発信タイプは「${data.name}」でした】\nあなたの事業に最適なInstagramリールの型がわかる無料診断✨\n#EditScore診断 #Instagram運用`;
 
+    const lockedStyle = { filter:"blur(6px)", pointerEvents:"none", userSelect:"none" };
     return (
       <div style={{ ...base, justifyContent:"flex-start", paddingTop:"40px", paddingBottom:"80px" }}>
         <div style={{ maxWidth:"600px", width:"100%" }}>
 
-          {/* Type Header */}
+          {/* ═══ FREE: Type Header ═══ */}
           <div style={{ ...card, padding:"40px", textAlign:"center", marginBottom:"16px", borderTop:`4px solid ${ACCENT}` }}>
             <div style={{ display:"flex", justifyContent:"center", gap:"8px", marginBottom:"20px", flexWrap:"wrap" }}>
               <div style={{ display:"inline-block", background:AL, color:ACCENT, fontSize:"11px", fontWeight:"600", letterSpacing:"0.1em", padding:"5px 14px", borderRadius:"50px", textTransform:"uppercase" }}>Type {code}</div>
@@ -521,7 +522,7 @@ export default function EditScoreDiagnostic() {
             <p style={{ fontSize:"14px", lineHeight:"1.9", color:"#475569", maxWidth:"460px", margin:"0 auto" }}>{data.desc}</p>
           </div>
 
-          {/* Strengths */}
+          {/* ═══ FREE: Strengths ═══ */}
           <div style={{ ...card, padding:"24px 32px", marginBottom:"16px" }}>
             <p style={{ fontSize:"12px", fontWeight:"600", color:"#64748B", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:"14px" }}>強み</p>
             <div style={{ display:"flex", gap:"8px", flexWrap:"wrap" }}>
@@ -529,23 +530,7 @@ export default function EditScoreDiagnostic() {
             </div>
           </div>
 
-          {/* Industry Advice */}
-          <div style={{ ...card, padding:"28px 32px", marginBottom:"16px", borderLeft:`4px solid #10B981` }}>
-            <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"12px" }}>
-              <span style={{ fontSize:"18px" }}>{ind.icon}</span>
-              <p style={{ fontSize:"12px", fontWeight:"600", color:"#064E3B", letterSpacing:"0.08em", textTransform:"uppercase", margin:0 }}>業種別アドバイス — {ind.label}</p>
-            </div>
-            <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#374151", marginBottom:"14px" }}>{ind.tips}</p>
-            <div style={{ display:"flex", gap:"8px", alignItems:"center", marginBottom:"14px", flexWrap:"wrap" }}>
-              <span style={{ fontSize:"11px", fontWeight:"600", color:"#064E3B", whiteSpace:"nowrap" }}>目標CV:</span>
-              <span style={{ fontSize:"12px", color:"#374151", background:"#F0FDF4", padding:"3px 10px", borderRadius:"4px", fontWeight:"500" }}>{ind.cvGoal}</span>
-            </div>
-            <div style={{ display:"flex", gap:"6px", flexWrap:"wrap" }}>
-              {ind.tags.map((t,i) => <span key={i} style={{ fontSize:"11px", color:"#047857", background:"#ECFDF5", padding:"3px 10px", borderRadius:"50px" }}>{t}</span>)}
-            </div>
-          </div>
-
-          {/* Axis Breakdown */}
+          {/* ═══ FREE: Axis Breakdown ═══ */}
           <div style={{ ...card, padding:"28px 32px", marginBottom:"16px" }}>
             <p style={{ fontSize:"12px", fontWeight:"600", color:"#64748B", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:"20px" }}>パーソナリティ内訳</p>
             {AXIS_META.map((ax,i) => (
@@ -564,101 +549,17 @@ export default function EditScoreDiagnostic() {
             ))}
           </div>
 
-          {/* Top 3 Reel Types */}
-          <div style={{ ...card, padding:"28px 32px", marginBottom:"16px" }}>
-            <p style={{ fontSize:"12px", fontWeight:"600", color:"#64748B", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:"20px" }}>相性の良いリールの型 TOP 3</p>
-            {data.types.map((t,i) => (
-              <div key={i} style={{ background:i===0?AL:"#FAFAFA", border:`1px solid ${i===0?AM:"#E2E8F0"}`, borderRadius:"8px", padding:"20px", marginBottom:i<2?"12px":0 }}>
-                <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"10px" }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
-                    {i===0 && <span style={{ background:ACCENT, color:"#fff", fontSize:"10px", fontWeight:"700", padding:"2px 10px", borderRadius:"4px", letterSpacing:"0.05em" }}>BEST</span>}
-                    <div>
-                      <span style={{ fontSize:"10px", color:"#94A3B8" }}>{t.id}</span>
-                      <h3 style={{ fontSize:"15px", fontWeight:"600", color:"#0F172A", margin:"2px 0 0" }}>{t.name}</h3>
-                    </div>
-                  </div>
-                  <span style={{ fontSize:"22px", fontWeight:"700", color:i===0?ACCENT:"#94A3B8" }}>{t.pct}<span style={{ fontSize:"11px" }}>%</span></span>
-                </div>
-                <div style={{ height:"4px", background:"#E2E8F0", borderRadius:"4px", marginBottom:"12px", overflow:"hidden" }}>
-                  <div style={{ height:"100%", width:`${t.pct}%`, background:i===0?ACCENT:"#94A3B8", borderRadius:"4px" }}/>
-                </div>
-                <p style={{ fontSize:"13px", lineHeight:"1.8", color:"#475569", margin:"0 0 12px" }}>{t.reason}</p>
-                {/* Reel search keyword */}
-                <div style={{ background:"#F8FAFC", border:"1px solid #E2E8F0", borderRadius:"6px", padding:"10px 14px", display:"flex", alignItems:"flex-start", gap:"10px" }}>
-                  <span style={{ fontSize:"13px", flexShrink:0 }}>🔍</span>
-                  <div>
-                    <p style={{ fontSize:"10px", fontWeight:"600", color:"#64748B", letterSpacing:"0.06em", textTransform:"uppercase", margin:"0 0 3px" }}>参考リールの探し方</p>
-                    <p style={{ fontSize:"12px", color:"#374151", margin:0 }}>Instagram / TikTok で <span style={{ fontWeight:"700", color:ACCENT }}>「{REEL_SEARCH[t.id]}」</span> と検索</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Influencer Search Guide */}
-          <div style={{ ...card, padding:"28px 32px", marginBottom:"16px" }}>
-            <p style={{ fontSize:"12px", fontWeight:"600", color:"#64748B", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:"4px" }}>参考インフルエンサーの探し方</p>
-            <p style={{ fontSize:"12px", color:"#94A3B8", marginBottom:"20px" }}>あなたのタイプ × {ind.label}に合ったアカウントを自分で見つけるためのガイド</p>
-
-            {/* Search keywords */}
-            <div style={{ background:"#F8FAFC", border:"1px solid #E2E8F0", borderRadius:"8px", padding:"16px 18px", marginBottom:"16px" }}>
-              <p style={{ fontSize:"11px", fontWeight:"600", color:"#374151", letterSpacing:"0.06em", textTransform:"uppercase", marginBottom:"14px" }}>🔍 Instagram 検索ワード</p>
-              <p style={{ fontSize:"11px", color:"#94A3B8", marginBottom:"8px" }}>あなたのタイプ別（発信スタイルで絞る）</p>
-              <div style={{ display:"flex", flexDirection:"column", gap:"6px", marginBottom:"16px" }}>
-                {guide.baseSearch.map((kw,i) => (
-                  <div key={i} style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-                    <span style={{ fontSize:"10px", color:ACCENT, fontWeight:"700" }}>→</span>
-                    <span style={{ fontSize:"12px", color:"#374151", background:AL, padding:"4px 10px", borderRadius:"4px", fontWeight:"500" }}>「{kw}」</span>
-                  </div>
-                ))}
-              </div>
-              <p style={{ fontSize:"11px", color:"#94A3B8", marginBottom:"8px" }}>業種（{ind.label}）でさらに絞る</p>
-              <div style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
-                {ind.indSearch.map((kw,i) => (
-                  <div key={i} style={{ display:"flex", alignItems:"center", gap:"8px" }}>
-                    <span style={{ fontSize:"10px", color:"#10B981", fontWeight:"700" }}>→</span>
-                    <span style={{ fontSize:"12px", color:"#374151", background:"#F0FDF4", padding:"4px 10px", borderRadius:"4px", fontWeight:"500" }}>「{kw}」</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Check points */}
-            <div style={{ marginBottom:"16px" }}>
-              <p style={{ fontSize:"11px", fontWeight:"600", color:"#374151", letterSpacing:"0.06em", textTransform:"uppercase", marginBottom:"12px" }}>✅ 良いアカウントの見分け方</p>
-              {guide.checkPoints.map((pt,i) => (
-                <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:"10px", padding:"9px 0", borderBottom:i<guide.checkPoints.length-1?"1px solid #F1F5F9":"none" }}>
-                  <div style={{ width:"18px", height:"18px", background:AL, borderRadius:"4px", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, marginTop:"1px" }}>
-                    <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 4.5L3 6.5L8 1.5" stroke={ACCENT} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </div>
-                  <span style={{ fontSize:"13px", color:"#374151", lineHeight:"1.6" }}>{pt}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Tier guide */}
-            <div>
-              <p style={{ fontSize:"11px", fontWeight:"600", color:"#374151", letterSpacing:"0.06em", textTransform:"uppercase", marginBottom:"10px" }}>📊 参考にすべきフォロワー規模</p>
-              {guide.tiers.map((t,i) => (
-                <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:"12px", padding:"12px 14px", background:"#FAFAFA", borderRadius:"6px", marginBottom:i<guide.tiers.length-1?"8px":0, border:"1px solid #F1F5F9" }}>
-                  <span style={{ fontSize:"12px", fontWeight:"700", color:"#0F172A", whiteSpace:"nowrap", paddingTop:"1px" }}>{t.label}</span>
-                  <span style={{ fontSize:"12px", color:"#64748B", lineHeight:"1.6" }}>{t.hint}</span>
-                </div>
-              ))}
-              <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"10px" }}>※ マイクロ×1〜2名 ＋ 中型×1名を参考にするのがおすすめです</p>
-            </div>
-          </div>
-
-          {/* CTA → LINE */}
+          {/* ═══ LINE CTA (between free & locked) ═══ */}
           <div style={{ ...card, padding:"36px 28px", textAlign:"center", marginBottom:"16px", borderTop:"4px solid #06C755", background:"linear-gradient(135deg,#F0FDF4,#fff)" }}>
-            <div style={{ display:"inline-block", background:"#DCFCE7", color:"#166534", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"16px", letterSpacing:"0.06em" }}>LINE連携 — 完全版レポート</div>
-            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>あなた専用の<br/>ブランド戦略PDFを<br/>LINEで受け取る</h3>
+            <div style={{ display:"inline-block", background:"#DCFCE7", color:"#166534", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"16px", letterSpacing:"0.06em" }}>LINE登録で全セクション解放</div>
+            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>詳細レポートを<br/>LINEで受け取る</h3>
             <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#64748B", marginBottom:"20px" }}>
-              タイプ「{data.name}」の完全版レポートと<br/>
-              リール台本テンプレートを無料でお届けします。
+              業種別アドバイス・リールTOP3・<br/>
+              インフルエンサーガイドを含む<br/>
+              完全版レポートを無料でお届けします。
             </p>
             <div style={{ display:"flex", gap:"8px", justifyContent:"center", flexWrap:"wrap", marginBottom:"20px" }}>
-              {["戦略PDF","台本テンプレート","タイプ別アドバイス"].map((t,i) => (
+              {["業種別戦略","リールTOP3","検索ワード","戦略PDF"].map((t,i) => (
                 <span key={i} style={{ fontSize:"12px", fontWeight:"600", color:"#166534", background:"#DCFCE7", padding:"5px 14px", borderRadius:"50px" }}>&#10003; {t}</span>
               ))}
             </div>
@@ -681,6 +582,133 @@ export default function EditScoreDiagnostic() {
               LINEで無料受け取る
             </button>
             <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>LINE公式アカウントに連携して配信します</p>
+          </div>
+
+          {/* ═══ LOCKED: Industry Advice ═══ */}
+          <div style={{ position:"relative", marginBottom:"16px" }}>
+            <div style={lockedStyle}>
+              <div style={{ ...card, padding:"28px 32px", borderLeft:"4px solid #10B981" }}>
+                <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"12px" }}>
+                  <span style={{ fontSize:"18px" }}>{ind.icon}</span>
+                  <p style={{ fontSize:"12px", fontWeight:"600", color:"#064E3B", letterSpacing:"0.08em", textTransform:"uppercase", margin:0 }}>業種別アドバイス — {ind.label}</p>
+                </div>
+                <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#374151", marginBottom:"14px" }}>{ind.tips}</p>
+                <div style={{ display:"flex", gap:"8px", alignItems:"center", marginBottom:"14px", flexWrap:"wrap" }}>
+                  <span style={{ fontSize:"11px", fontWeight:"600", color:"#064E3B", whiteSpace:"nowrap" }}>目標CV:</span>
+                  <span style={{ fontSize:"12px", color:"#374151", background:"#F0FDF4", padding:"3px 10px", borderRadius:"4px", fontWeight:"500" }}>{ind.cvGoal}</span>
+                </div>
+                <div style={{ display:"flex", gap:"6px", flexWrap:"wrap" }}>
+                  {ind.tags.map((t,i) => <span key={i} style={{ fontSize:"11px", color:"#047857", background:"#ECFDF5", padding:"3px 10px", borderRadius:"50px" }}>{t}</span>)}
+                </div>
+              </div>
+            </div>
+            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
+              <div style={{ textAlign:"center" }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ margin:"0 auto 8px" }}><rect x="3" y="11" width="18" height="11" rx="2" stroke="#06C755" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#06C755" strokeWidth="2" strokeLinecap="round"/></svg>
+                <p style={{ fontSize:"13px", fontWeight:"600", color:"#0F172A", margin:"0 0 2px" }}>業種別アドバイス</p>
+                <p style={{ fontSize:"11px", color:"#64748B" }}>LINE登録で閲覧可能</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ═══ LOCKED: Top 3 Reel Types ═══ */}
+          <div style={{ position:"relative", marginBottom:"16px" }}>
+            <div style={lockedStyle}>
+              <div style={{ ...card, padding:"28px 32px" }}>
+                <p style={{ fontSize:"12px", fontWeight:"600", color:"#64748B", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:"20px" }}>相性の良いリールの型 TOP 3</p>
+                {data.types.map((t,i) => (
+                  <div key={i} style={{ background:i===0?AL:"#FAFAFA", border:`1px solid ${i===0?AM:"#E2E8F0"}`, borderRadius:"8px", padding:"20px", marginBottom:i<2?"12px":0 }}>
+                    <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:"10px" }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:"10px" }}>
+                        {i===0 && <span style={{ background:ACCENT, color:"#fff", fontSize:"10px", fontWeight:"700", padding:"2px 10px", borderRadius:"4px", letterSpacing:"0.05em" }}>BEST</span>}
+                        <div>
+                          <span style={{ fontSize:"10px", color:"#94A3B8" }}>{t.id}</span>
+                          <h3 style={{ fontSize:"15px", fontWeight:"600", color:"#0F172A", margin:"2px 0 0" }}>{t.name}</h3>
+                        </div>
+                      </div>
+                      <span style={{ fontSize:"22px", fontWeight:"700", color:i===0?ACCENT:"#94A3B8" }}>{t.pct}<span style={{ fontSize:"11px" }}>%</span></span>
+                    </div>
+                    <div style={{ height:"4px", background:"#E2E8F0", borderRadius:"4px", marginBottom:"12px", overflow:"hidden" }}>
+                      <div style={{ height:"100%", width:`${t.pct}%`, background:i===0?ACCENT:"#94A3B8", borderRadius:"4px" }}/>
+                    </div>
+                    <p style={{ fontSize:"13px", lineHeight:"1.8", color:"#475569", margin:"0 0 12px" }}>{t.reason}</p>
+                    <div style={{ background:"#F8FAFC", border:"1px solid #E2E8F0", borderRadius:"6px", padding:"10px 14px", display:"flex", alignItems:"flex-start", gap:"10px" }}>
+                      <span style={{ fontSize:"13px", flexShrink:0 }}>🔍</span>
+                      <div>
+                        <p style={{ fontSize:"10px", fontWeight:"600", color:"#64748B", letterSpacing:"0.06em", textTransform:"uppercase", margin:"0 0 3px" }}>参考リールの探し方</p>
+                        <p style={{ fontSize:"12px", color:"#374151", margin:0 }}>Instagram / TikTok で <span style={{ fontWeight:"700", color:ACCENT }}>「{REEL_SEARCH[t.id]}」</span> と検索</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
+              <div style={{ textAlign:"center" }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ margin:"0 auto 8px" }}><rect x="3" y="11" width="18" height="11" rx="2" stroke="#06C755" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#06C755" strokeWidth="2" strokeLinecap="round"/></svg>
+                <p style={{ fontSize:"13px", fontWeight:"600", color:"#0F172A", margin:"0 0 2px" }}>相性の良いリールの型 TOP 3</p>
+                <p style={{ fontSize:"11px", color:"#64748B" }}>LINE登録で閲覧可能</p>
+              </div>
+            </div>
+          </div>
+
+          {/* ═══ LOCKED: Influencer Search Guide ═══ */}
+          <div style={{ position:"relative", marginBottom:"16px" }}>
+            <div style={lockedStyle}>
+              <div style={{ ...card, padding:"28px 32px" }}>
+                <p style={{ fontSize:"12px", fontWeight:"600", color:"#64748B", letterSpacing:"0.08em", textTransform:"uppercase", marginBottom:"4px" }}>参考インフルエンサーの探し方</p>
+                <p style={{ fontSize:"12px", color:"#94A3B8", marginBottom:"20px" }}>あなたのタイプ × {ind.label}に合ったアカウントを自分で見つけるためのガイド</p>
+                <div style={{ background:"#F8FAFC", border:"1px solid #E2E8F0", borderRadius:"8px", padding:"16px 18px", marginBottom:"16px" }}>
+                  <p style={{ fontSize:"11px", fontWeight:"600", color:"#374151", letterSpacing:"0.06em", textTransform:"uppercase", marginBottom:"14px" }}>🔍 Instagram 検索ワード</p>
+                  <p style={{ fontSize:"11px", color:"#94A3B8", marginBottom:"8px" }}>あなたのタイプ別（発信スタイルで絞る）</p>
+                  <div style={{ display:"flex", flexDirection:"column", gap:"6px", marginBottom:"16px" }}>
+                    {guide.baseSearch.map((kw,i) => (
+                      <div key={i} style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                        <span style={{ fontSize:"10px", color:ACCENT, fontWeight:"700" }}>→</span>
+                        <span style={{ fontSize:"12px", color:"#374151", background:AL, padding:"4px 10px", borderRadius:"4px", fontWeight:"500" }}>「{kw}」</span>
+                      </div>
+                    ))}
+                  </div>
+                  <p style={{ fontSize:"11px", color:"#94A3B8", marginBottom:"8px" }}>業種（{ind.label}）でさらに絞る</p>
+                  <div style={{ display:"flex", flexDirection:"column", gap:"6px" }}>
+                    {ind.indSearch.map((kw,i) => (
+                      <div key={i} style={{ display:"flex", alignItems:"center", gap:"8px" }}>
+                        <span style={{ fontSize:"10px", color:"#10B981", fontWeight:"700" }}>→</span>
+                        <span style={{ fontSize:"12px", color:"#374151", background:"#F0FDF4", padding:"4px 10px", borderRadius:"4px", fontWeight:"500" }}>「{kw}」</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div style={{ marginBottom:"16px" }}>
+                  <p style={{ fontSize:"11px", fontWeight:"600", color:"#374151", letterSpacing:"0.06em", textTransform:"uppercase", marginBottom:"12px" }}>✅ 良いアカウントの見分け方</p>
+                  {guide.checkPoints.map((pt,i) => (
+                    <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:"10px", padding:"9px 0", borderBottom:i<guide.checkPoints.length-1?"1px solid #F1F5F9":"none" }}>
+                      <div style={{ width:"18px", height:"18px", background:AL, borderRadius:"4px", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, marginTop:"1px" }}>
+                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M1 4.5L3 6.5L8 1.5" stroke={ACCENT} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      </div>
+                      <span style={{ fontSize:"13px", color:"#374151", lineHeight:"1.6" }}>{pt}</span>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <p style={{ fontSize:"11px", fontWeight:"600", color:"#374151", letterSpacing:"0.06em", textTransform:"uppercase", marginBottom:"10px" }}>📊 参考にすべきフォロワー規模</p>
+                  {guide.tiers.map((t,i) => (
+                    <div key={i} style={{ display:"flex", alignItems:"flex-start", gap:"12px", padding:"12px 14px", background:"#FAFAFA", borderRadius:"6px", marginBottom:i<guide.tiers.length-1?"8px":0, border:"1px solid #F1F5F9" }}>
+                      <span style={{ fontSize:"12px", fontWeight:"700", color:"#0F172A", whiteSpace:"nowrap", paddingTop:"1px" }}>{t.label}</span>
+                      <span style={{ fontSize:"12px", color:"#64748B", lineHeight:"1.6" }}>{t.hint}</span>
+                    </div>
+                  ))}
+                  <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"10px" }}>※ マイクロ×1〜2名 ＋ 中型×1名を参考にするのがおすすめです</p>
+                </div>
+              </div>
+            </div>
+            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
+              <div style={{ textAlign:"center" }}>
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ margin:"0 auto 8px" }}><rect x="3" y="11" width="18" height="11" rx="2" stroke="#06C755" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#06C755" strokeWidth="2" strokeLinecap="round"/></svg>
+                <p style={{ fontSize:"13px", fontWeight:"600", color:"#0F172A", margin:"0 0 2px" }}>インフルエンサーガイド</p>
+                <p style={{ fontSize:"11px", color:"#64748B" }}>LINE登録で閲覧可能</p>
+              </div>
+            </div>
           </div>
 
           {/* Actions */}
