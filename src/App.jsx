@@ -7,7 +7,6 @@ const AM = "#DBEAFE";
 // ▼ 設定項目 — 実際のURLに差し替えてください
 const MAKE_WEBHOOK = "https://hook.us2.make.com/1tjy4p8nafmgg5evcmq89f369a59lrbu";
 const LIFF_URL = "https://liff.line.me/2009318162-SODj4Xe8";
-const WEBINAR_URL = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=EditScore+%E7%84%A1%E6%96%99%E3%82%A6%E3%82%A7%E3%83%93%E3%83%8A%E3%83%BC&dates=20260318T110000Z/20260318T120000Z&details=%E8%A8%BA%E6%96%AD%E7%B5%90%E6%9E%9C%E3%82%92%E3%82%82%E3%81%A8%E3%81%AB%E3%83%AA%E3%83%BC%E3%83%AB%E6%88%A6%E7%95%A5%E3%82%92%E8%A7%A3%E8%AA%AC&location=Zoom";
 
 // 業種マッピング: フロント表示名 → Notionセレクト値
 const INDUSTRY_TO_NOTION = {
@@ -255,7 +254,7 @@ export default function EditScoreDiagnostic() {
         const code = getTypeCode(scores);
         const pcts = scores.map(s => Math.max(8, Math.min(92, Math.round((s/15)*50+50))));
         setResult({ code, data: TYPE_DATA[code], pcts });
-        go(() => setScreen("result"));
+        go(() => setScreen("register"));
       }, 3200);
     }
   };
@@ -418,7 +417,6 @@ export default function EditScoreDiagnostic() {
       if (!regName.trim() || !regEmail.trim()) { setRegError("お名前とメールアドレスは必須です"); return; }
       if (!/\S+@\S+\.\S+/.test(regEmail)) { setRegError("有効なメールアドレスを入力してください"); return; }
       setRegError(""); setRegLoading(true);
-      // Notionフィールド名と完全一致させたペイロード（MakeがそのままNotion連携可能）
       const today = new Date();
       const dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
       const payload = {
@@ -432,38 +430,12 @@ export default function EditScoreDiagnostic() {
         強み:           data.strengths.join(" / "),
         最適リール型:    data.types[0].name,
         申込日時:        dateStr,
-        ウェビナーURL:   WEBINAR_URL,
       };
       try { await fetch(MAKE_WEBHOOK, { method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload) }); }
       catch(e) { /* Notion保存失敗でも体験継続 */ }
       setRegLoading(false); setRegDone(true);
-      setTimeout(() => window.open(WEBINAR_URL, "_blank"), 600);
+      go(() => setScreen("result"));
     };
-
-    if (regDone) return (
-      <div style={base}>
-        <div style={{ ...card, maxWidth:"480px", textAlign:"center", padding:"56px 40px" }}>
-          <div style={{ width:"56px", height:"56px", background:"#DCFCE7", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 24px" }}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-          </div>
-          <h2 style={{ fontSize:"22px", fontWeight:"700", color:"#0F172A", marginBottom:"10px" }}>申し込み情報を受け付けました</h2>
-          <p style={{ fontSize:"13px", color:"#64748B", lineHeight:"1.9", marginBottom:"28px" }}>
-            ウェビナー申込ページを別タブで開きました。<br/>
-            開かない場合は下のボタンからどうぞ。
-          </p>
-          <div style={{ background:AL, border:`1px solid ${AM}`, borderRadius:"8px", padding:"16px 20px", marginBottom:"24px", textAlign:"left" }}>
-            <p style={{ fontSize:"11px", fontWeight:"600", color:ACCENT, marginBottom:"6px", textTransform:"uppercase", letterSpacing:"0.06em" }}>申し込み情報（確認）</p>
-            <p style={{ fontSize:"13px", color:"#374151", margin:"0 0 4px" }}>👤 {regName}</p>
-            <p style={{ fontSize:"13px", color:"#374151", margin:"0 0 4px" }}>📧 {regEmail}</p>
-            <p style={{ fontSize:"13px", color:"#374151", margin:0 }}>🏷️ 診断タイプ：{data.kanji} {data.name}</p>
-          </div>
-          <button style={{ ...btn, width:"100%", marginBottom:"10px" }} onClick={() => window.open(WEBINAR_URL,"_blank")} onMouseOver={e=>e.currentTarget.style.background="#1D4ED8"} onMouseOut={e=>e.currentTarget.style.background=ACCENT}>
-            ウェビナー申込ページを開く →
-          </button>
-          <button onClick={() => go(() => setScreen("result"))} style={{ background:"none", border:"none", color:"#94A3B8", cursor:"pointer", fontSize:"13px", fontFamily:"inherit" }}>← 診断結果に戻る</button>
-        </div>
-      </div>
-    );
 
     return (
       <div style={base}>
@@ -481,9 +453,9 @@ export default function EditScoreDiagnostic() {
           {/* フォームカード */}
           <div style={{ ...card, padding:"36px 32px" }}>
             <div style={{ textAlign:"center", marginBottom:"28px" }}>
-              <div style={{ display:"inline-block", background:"#FEF3C7", color:"#92400E", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"14px", letterSpacing:"0.06em" }}>📅 無料ウェビナー</div>
-              <h2 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"8px" }}>Instagram Reels 初心者向け<br/>無料ウェビナーに申し込む</h2>
-              <p style={{ fontSize:"13px", color:"#64748B", lineHeight:"1.8" }}>診断結果と合わせてお席を確保します。<br/>申し込み後にウェビナー詳細をお送りします。</p>
+              <div style={{ display:"inline-block", background:"#DCFCE7", color:"#166534", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"14px", letterSpacing:"0.06em" }}>📄 あと少しで完了</div>
+              <h2 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"8px" }}>お名前とメールアドレスを<br/>入力して診断結果を確認</h2>
+              <p style={{ fontSize:"13px", color:"#64748B", lineHeight:"1.8" }}>完全版レポートとタイプ別アドバイスを<br/>LINEでお届けするために使用します。</p>
             </div>
 
             {/* フォーム */}
@@ -513,19 +485,14 @@ export default function EditScoreDiagnostic() {
               style={{ ...btn, width:"100%", padding:"16px", fontSize:"15px", opacity:regLoading?0.7:1, cursor:regLoading?"wait":"pointer" }}
               onMouseOver={e=>{ if(!regLoading) e.currentTarget.style.background="#1D4ED8"; }}
               onMouseOut={e=>e.currentTarget.style.background=ACCENT}>
-              {regLoading ? "送信中..." : "申し込んでウェビナーへ →"}
+              {regLoading ? "送信中..." : "診断結果を見る →"}
             </button>
 
             <div style={{ display:"flex", alignItems:"center", gap:"8px", justifyContent:"center", marginTop:"16px" }}>
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zm0 2.5v3l2 1" stroke="#94A3B8" strokeWidth="1.2" strokeLinecap="round"/></svg>
-              <p style={{ fontSize:"11px", color:"#94A3B8", margin:0 }}>入力情報は安全に管理され、ウェビナー案内にのみ使用します</p>
+              <p style={{ fontSize:"11px", color:"#94A3B8", margin:0 }}>入力情報は安全に管理され、診断レポート配信にのみ使用します</p>
             </div>
           </div>
-
-          <button onClick={() => go(() => setScreen("result"))} style={{ background:"none", border:"none", color:"#94A3B8", cursor:"pointer", fontSize:"13px", fontFamily:"inherit", display:"flex", alignItems:"center", gap:"6px", padding:"16px 0", margin:"0 auto" }}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="#94A3B8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            診断結果に戻る
-          </button>
         </div>
       </div>
     );
@@ -683,7 +650,6 @@ export default function EditScoreDiagnostic() {
           </div>
 
           {/* CTA → LINE */}
-          {regDone && (
           <div style={{ ...card, padding:"36px 28px", textAlign:"center", marginBottom:"16px", borderTop:"4px solid #06C755", background:"linear-gradient(135deg,#F0FDF4,#fff)" }}>
             <div style={{ display:"inline-block", background:"#DCFCE7", color:"#166534", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"16px", letterSpacing:"0.06em" }}>LINE連携 — 完全版レポート</div>
             <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>あなた専用の<br/>ブランド戦略PDFを<br/>LINEで受け取る</h3>
@@ -692,7 +658,7 @@ export default function EditScoreDiagnostic() {
               リール台本テンプレートを無料でお届けします。
             </p>
             <div style={{ display:"flex", gap:"8px", justifyContent:"center", flexWrap:"wrap", marginBottom:"20px" }}>
-              {["戦略PDF","台本テンプレート","20日間配信"].map((t,i) => (
+              {["戦略PDF","台本テンプレート","タイプ別アドバイス"].map((t,i) => (
                 <span key={i} style={{ fontSize:"12px", fontWeight:"600", color:"#166534", background:"#DCFCE7", padding:"5px 14px", borderRadius:"50px" }}>&#10003; {t}</span>
               ))}
             </div>
@@ -715,35 +681,6 @@ export default function EditScoreDiagnostic() {
               LINEで無料受け取る
             </button>
             <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>LINE公式アカウントに連携して配信します</p>
-          </div>
-          )}
-
-          {/* CTA → Webinar */}
-          <div style={{ ...card, padding:"36px 40px", textAlign:"center", marginBottom:"16px", borderTop:`4px solid #F59E0B`, background:"linear-gradient(135deg,#FFFBEB,#fff)" }}>
-            <div style={{ display:"inline-block", background:"#FEF3C7", color:"#92400E", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"16px", letterSpacing:"0.06em" }}>📅 Next Step — 無料ウェビナー</div>
-            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>診断結果をもとに<br/>初心者向け無料ウェビナーで<br/>実践ロードマップを受け取る</h3>
-            <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#64748B", marginBottom:"24px" }}>
-              あなたのタイプ「{data.name}」に合った<br/>
-              リール戦略を講師が直接解説します。
-            </p>
-            <div style={{ display:"flex", gap:"10px", justifyContent:"center", flexWrap:"wrap", marginBottom:"20px" }}>
-              {["参加無料","録画視聴あり","特典資料プレゼント"].map((t,i) => (
-                <span key={i} style={{ fontSize:"12px", fontWeight:"600", color:"#92400E", background:"#FEF3C7", padding:"5px 14px", borderRadius:"50px" }}>✓ {t}</span>
-              ))}
-            </div>
-            <button style={{ ...btn, padding:"16px 48px", fontSize:"15px", background:"#F59E0B", width:"100%", maxWidth:"380px" }}
-              onClick={() => {
-                if (!regDone) {
-                  go(() => setScreen("register"));
-                } else {
-                  window.open(WEBINAR_URL, "_blank");
-                }
-              }}
-              onMouseOver={e=>e.currentTarget.style.background="#D97706"}
-              onMouseOut={e=>e.currentTarget.style.background="#F59E0B"}>
-              {regDone ? "Googleカレンダーに追加する →" : "無料ウェビナーに申し込む →"}
-            </button>
-            <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>{regDone ? "3/18（水）20:00〜21:00 Zoom開催" : "申し込み後にウェビナー詳細URLをお送りします"}</p>
           </div>
 
           {/* Actions */}
