@@ -239,6 +239,7 @@ export default function EditScoreDiagnostic() {
   const [regLoading, setRegLoading] = useState(false);
   const [regError, setRegError] = useState("");
   const [regDone, setRegDone] = useState(false);
+  const [lineDone, setLineDone] = useState(false);
 
   const go = fn => { setFade(false); setTimeout(() => { fn(); setFade(true); }, 250); };
 
@@ -505,7 +506,7 @@ export default function EditScoreDiagnostic() {
     const guide = data.influencerGuide;
     const shareText = `【私のリール発信タイプは「${data.name}」でした】\nあなたの事業に最適なInstagramリールの型がわかる無料診断✨\n#EditScore診断 #Instagram運用`;
 
-    const lockedStyle = { filter:"blur(6px)", pointerEvents:"none", userSelect:"none" };
+    const lockedStyle = lineDone ? {} : { filter:"blur(6px)", pointerEvents:"none", userSelect:"none" };
     return (
       <div style={{ ...base, justifyContent:"flex-start", paddingTop:"40px", paddingBottom:"80px" }}>
         <div style={{ maxWidth:"600px", width:"100%" }}>
@@ -550,6 +551,37 @@ export default function EditScoreDiagnostic() {
           </div>
 
           {/* ═══ LINE CTA (between free & locked) ═══ */}
+          {lineDone ? (
+          <div style={{ ...card, padding:"36px 28px", textAlign:"center", marginBottom:"16px", borderTop:"4px solid #06C755", background:"linear-gradient(135deg,#F0FDF4,#fff)" }}>
+            <div style={{ width:"48px", height:"48px", background:"#DCFCE7", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 16px" }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>詳細レポートが<br/>解放されました</h3>
+            <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#64748B", marginBottom:"24px" }}>
+              下のセクションをすべてご覧いただけます。<br/>
+              さらに詳しいアドバイスはLINEで個別にお伝えします。
+            </p>
+            <button style={{ width:"100%", maxWidth:"380px", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", background:"#06C755", color:"#fff", fontFamily:"'Noto Sans JP',sans-serif", fontSize:"15px", fontWeight:"700", letterSpacing:"0.02em", border:"none", borderRadius:"12px", padding:"16px 24px", cursor:"pointer", transition:"background 0.2s, transform 0.15s, box-shadow 0.2s", boxShadow:"0 2px 8px rgba(6,199,85,0.25)", margin:"0 auto" }}
+              onClick={() => {
+                const params = new URLSearchParams({
+                  type: data.kanji,
+                  source: 'consultation',
+                  name: regName,
+                  email: regEmail,
+                  biz: regBiz
+                });
+                window.open(LIFF_URL + '?' + params.toString(), '_blank');
+              }}
+              onMouseOver={e=>{e.currentTarget.style.background="#05B34C";e.currentTarget.style.transform="translateY(-1px)";}}
+              onMouseOut={e=>{e.currentTarget.style.background="#06C755";e.currentTarget.style.transform="translateY(0)";}}>
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" style={{width:"20px",height:"20px",flexShrink:0}}>
+                <path d="M12 2C6.48 2 2 6.05 2 11.07c0 4.46 3.61 8.19 8.49 8.87.33.07.78.22.89.5.1.26.07.66.03.93l-.14.87c-.04.26-.2 1.03.9.56 1.11-.47 5.96-3.5 8.13-6 1.5-1.64 2.22-3.31 2.22-5.13C22.52 6.05 18.04 2 12 2z"/>
+              </svg>
+              LINEで無料相談してみる
+            </button>
+            <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>あなたの診断結果をもとに個別アドバイスします</p>
+          </div>
+          ) : (
           <div style={{ ...card, padding:"36px 28px", textAlign:"center", marginBottom:"16px", borderTop:"4px solid #06C755", background:"linear-gradient(135deg,#F0FDF4,#fff)" }}>
             <div style={{ display:"inline-block", background:"#DCFCE7", color:"#166534", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"16px", letterSpacing:"0.06em" }}>LINE登録で全セクション解放</div>
             <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>詳細レポートを<br/>LINEで受け取る</h3>
@@ -565,6 +597,7 @@ export default function EditScoreDiagnostic() {
             </div>
             <button style={{ width:"100%", maxWidth:"380px", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", background:"#06C755", color:"#fff", fontFamily:"'Noto Sans JP',sans-serif", fontSize:"15px", fontWeight:"700", letterSpacing:"0.02em", border:"none", borderRadius:"12px", padding:"16px 24px", cursor:"pointer", transition:"background 0.2s, transform 0.15s, box-shadow 0.2s", boxShadow:"0 2px 8px rgba(6,199,85,0.25)", margin:"0 auto" }}
               onClick={() => {
+                setLineDone(true);
                 const params = new URLSearchParams({
                   type: data.kanji,
                   source: 'diagnosis',
@@ -583,6 +616,7 @@ export default function EditScoreDiagnostic() {
             </button>
             <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>LINE公式アカウントに連携して配信します</p>
           </div>
+          )}
 
           {/* ═══ LOCKED: Industry Advice ═══ */}
           <div style={{ position:"relative", marginBottom:"16px" }}>
@@ -602,13 +636,13 @@ export default function EditScoreDiagnostic() {
                 </div>
               </div>
             </div>
-            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
+            {!lineDone && <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
               <div style={{ textAlign:"center" }}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ margin:"0 auto 8px" }}><rect x="3" y="11" width="18" height="11" rx="2" stroke="#06C755" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#06C755" strokeWidth="2" strokeLinecap="round"/></svg>
                 <p style={{ fontSize:"13px", fontWeight:"600", color:"#0F172A", margin:"0 0 2px" }}>業種別アドバイス</p>
                 <p style={{ fontSize:"11px", color:"#64748B" }}>LINE登録で閲覧可能</p>
               </div>
-            </div>
+            </div>}
           </div>
 
           {/* ═══ LOCKED: Top 3 Reel Types ═══ */}
@@ -643,13 +677,13 @@ export default function EditScoreDiagnostic() {
                 ))}
               </div>
             </div>
-            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
+            {!lineDone && <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
               <div style={{ textAlign:"center" }}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ margin:"0 auto 8px" }}><rect x="3" y="11" width="18" height="11" rx="2" stroke="#06C755" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#06C755" strokeWidth="2" strokeLinecap="round"/></svg>
                 <p style={{ fontSize:"13px", fontWeight:"600", color:"#0F172A", margin:"0 0 2px" }}>相性の良いリールの型 TOP 3</p>
                 <p style={{ fontSize:"11px", color:"#64748B" }}>LINE登録で閲覧可能</p>
               </div>
-            </div>
+            </div>}
           </div>
 
           {/* ═══ LOCKED: Influencer Search Guide ═══ */}
@@ -702,13 +736,13 @@ export default function EditScoreDiagnostic() {
                 </div>
               </div>
             </div>
-            <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
+            {!lineDone && <div style={{ position:"absolute", inset:0, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(255,255,255,0.5)", borderRadius:"12px" }}>
               <div style={{ textAlign:"center" }}>
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" style={{ margin:"0 auto 8px" }}><rect x="3" y="11" width="18" height="11" rx="2" stroke="#06C755" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#06C755" strokeWidth="2" strokeLinecap="round"/></svg>
                 <p style={{ fontSize:"13px", fontWeight:"600", color:"#0F172A", margin:"0 0 2px" }}>インフルエンサーガイド</p>
                 <p style={{ fontSize:"11px", color:"#64748B" }}>LINE登録で閲覧可能</p>
               </div>
-            </div>
+            </div>}
           </div>
 
           {/* Actions */}
