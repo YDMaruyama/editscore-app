@@ -550,76 +550,37 @@ export default function EditScoreDiagnostic() {
             ))}
           </div>
 
-          {/* ═══ LINE CTA (between free & locked) ═══ */}
-          {lineDone ? (
-          <div style={{ ...card, padding:"36px 28px", textAlign:"center", marginBottom:"16px", borderTop:"4px solid #06C755", background:"linear-gradient(135deg,#F0FDF4,#fff)" }}>
-            <div style={{ width:"48px", height:"48px", background:"#DCFCE7", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 16px" }}>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M5 13L9 17L19 7" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </div>
-            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>詳細レポートが<br/>解放されました</h3>
-            <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#64748B", marginBottom:"24px" }}>
-              下のセクションをすべてご覧いただけます。<br/>
-              さらに詳しいアドバイスはLINEで個別にお伝えします。
-            </p>
-            <button style={{ width:"100%", maxWidth:"380px", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", background:"#06C755", color:"#fff", fontFamily:"'Noto Sans JP',sans-serif", fontSize:"15px", fontWeight:"700", letterSpacing:"0.02em", border:"none", borderRadius:"12px", padding:"16px 24px", cursor:"pointer", transition:"background 0.2s, transform 0.15s, box-shadow 0.2s", boxShadow:"0 2px 8px rgba(6,199,85,0.25)", margin:"0 auto" }}
-              onClick={() => {
-                const params = new URLSearchParams({
-                  type: data.kanji,
-                  source: 'consultation',
-                  name: regName,
-                  email: regEmail,
-                  biz: regBiz
-                });
-                window.open(LIFF_URL + '?' + params.toString(), '_blank');
-              }}
-              onMouseOver={e=>{e.currentTarget.style.background="#05B34C";e.currentTarget.style.transform="translateY(-1px)";}}
-              onMouseOut={e=>{e.currentTarget.style.background="#06C755";e.currentTarget.style.transform="translateY(0)";}}>
-              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" style={{width:"20px",height:"20px",flexShrink:0}}>
-                <path d="M12 2C6.48 2 2 6.05 2 11.07c0 4.46 3.61 8.19 8.49 8.87.33.07.78.22.89.5.1.26.07.66.03.93l-.14.87c-.04.26-.2 1.03.9.56 1.11-.47 5.96-3.5 8.13-6 1.5-1.64 2.22-3.31 2.22-5.13C22.52 6.05 18.04 2 12 2z"/>
-              </svg>
-              LINEで無料相談してみる
-            </button>
-            <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>あなたの診断結果をもとに個別アドバイスします</p>
-          </div>
-          ) : (
-          <div style={{ ...card, padding:"36px 28px", textAlign:"center", marginBottom:"16px", borderTop:"4px solid #06C755", background:"linear-gradient(135deg,#F0FDF4,#fff)" }}>
-            <div style={{ display:"inline-block", background:"#DCFCE7", color:"#166534", fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"16px", letterSpacing:"0.06em" }}>LINE登録で全セクション解放</div>
-            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>詳細レポートを<br/>LINEで受け取る</h3>
+          {/* ═══ UNLOCK CTA (between free & locked) ═══ */}
+          {!lineDone && (
+          <div style={{ ...card, padding:"36px 28px", textAlign:"center", marginBottom:"16px", borderTop:`4px solid ${ACCENT}`, background:"linear-gradient(135deg,#EFF6FF,#fff)" }}>
+            <div style={{ display:"inline-block", background:AL, color:ACCENT, fontSize:"11px", fontWeight:"600", padding:"4px 14px", borderRadius:"50px", marginBottom:"16px", letterSpacing:"0.06em" }}>あと少しで全セクション解放</div>
+            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>詳細レポートを見る</h3>
             <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#64748B", marginBottom:"20px" }}>
               業種別アドバイス・リールTOP3・<br/>
               インフルエンサーガイドを含む<br/>
-              完全版レポートを無料でお届けします。
+              完全版レポートを無料で閲覧できます。
             </p>
             <div style={{ display:"flex", gap:"8px", justifyContent:"center", flexWrap:"wrap", marginBottom:"20px" }}>
-              {["業種別戦略","リールTOP3","検索ワード","戦略PDF"].map((t,i) => (
-                <span key={i} style={{ fontSize:"12px", fontWeight:"600", color:"#166534", background:"#DCFCE7", padding:"5px 14px", borderRadius:"50px" }}>&#10003; {t}</span>
+              {["業種別戦略","リールTOP3","検索ワード","探し方ガイド"].map((t,i) => (
+                <span key={i} style={{ fontSize:"12px", fontWeight:"600", color:ACCENT, background:AL, padding:"5px 14px", borderRadius:"50px" }}>&#10003; {t}</span>
               ))}
             </div>
-            <button style={{ width:"100%", maxWidth:"380px", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", background:"#06C755", color:"#fff", fontFamily:"'Noto Sans JP',sans-serif", fontSize:"15px", fontWeight:"700", letterSpacing:"0.02em", border:"none", borderRadius:"12px", padding:"16px 24px", cursor:"pointer", transition:"background 0.2s, transform 0.15s, box-shadow 0.2s", boxShadow:"0 2px 8px rgba(6,199,85,0.25)", margin:"0 auto" }}
+            <button style={{ width:"100%", maxWidth:"380px", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", background:ACCENT, color:"#fff", fontFamily:"'Noto Sans JP',sans-serif", fontSize:"15px", fontWeight:"700", letterSpacing:"0.02em", border:"none", borderRadius:"12px", padding:"16px 24px", cursor:"pointer", transition:"background 0.2s, transform 0.15s, box-shadow 0.2s", boxShadow:"0 2px 8px rgba(37,99,235,0.25)", margin:"0 auto" }}
               onClick={() => {
                 setLineDone(true);
-                const params = new URLSearchParams({
-                  type: data.kanji,
-                  source: 'diagnosis',
-                  name: regName,
-                  email: regEmail,
-                  biz: regBiz
-                });
-                window.open(LIFF_URL + '?' + params.toString(), '_blank');
+                setTimeout(() => { const el = document.getElementById("unlocked-detail"); if(el) el.scrollIntoView({ behavior:"smooth", block:"start" }); }, 100);
               }}
-              onMouseOver={e=>{e.currentTarget.style.background="#05B34C";e.currentTarget.style.transform="translateY(-1px)";}}
-              onMouseOut={e=>{e.currentTarget.style.background="#06C755";e.currentTarget.style.transform="translateY(0)";}}>
-              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" style={{width:"20px",height:"20px",flexShrink:0}}>
-                <path d="M12 2C6.48 2 2 6.05 2 11.07c0 4.46 3.61 8.19 8.49 8.87.33.07.78.22.89.5.1.26.07.66.03.93l-.14.87c-.04.26-.2 1.03.9.56 1.11-.47 5.96-3.5 8.13-6 1.5-1.64 2.22-3.31 2.22-5.13C22.52 6.05 18.04 2 12 2z"/>
-              </svg>
-              LINEで無料受け取る
+              onMouseOver={e=>{e.currentTarget.style.background="#1D4ED8";e.currentTarget.style.transform="translateY(-1px)";}}
+              onMouseOut={e=>{e.currentTarget.style.background=ACCENT;e.currentTarget.style.transform="translateY(0)";}}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{flexShrink:0}}><rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" strokeWidth="2"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/></svg>
+              詳細レポートを解放する
             </button>
-            <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>LINE公式アカウントに連携して配信します</p>
+            <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>すべてのセクションが閲覧可能になります</p>
           </div>
           )}
 
           {/* ═══ LOCKED: Industry Advice ═══ */}
-          <div style={{ position:"relative", marginBottom:"16px" }}>
+          <div id="unlocked-detail" style={{ position:"relative", marginBottom:"16px" }}>
             <div style={lockedStyle}>
               <div style={{ ...card, padding:"28px 32px", borderLeft:"4px solid #10B981" }}>
                 <div style={{ display:"flex", alignItems:"center", gap:"8px", marginBottom:"12px" }}>
@@ -744,6 +705,39 @@ export default function EditScoreDiagnostic() {
               </div>
             </div>}
           </div>
+
+          {/* ═══ LINE CTA (after unlocked content) ═══ */}
+          {lineDone && (
+          <div style={{ ...card, padding:"36px 28px", textAlign:"center", marginBottom:"16px", borderTop:"4px solid #06C755", background:"linear-gradient(135deg,#F0FDF4,#fff)" }}>
+            <div style={{ width:"48px", height:"48px", background:"#DCFCE7", borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", margin:"0 auto 16px" }}>
+              <svg viewBox="0 0 24 24" fill="#06C755" width="24" height="24"><path d="M12 2C6.48 2 2 6.05 2 11.07c0 4.46 3.61 8.19 8.49 8.87.33.07.78.22.89.5.1.26.07.66.03.93l-.14.87c-.04.26-.2 1.03.9.56 1.11-.47 5.96-3.5 8.13-6 1.5-1.64 2.22-3.31 2.22-5.13C22.52 6.05 18.04 2 12 2z"/></svg>
+            </div>
+            <h3 style={{ fontSize:"clamp(18px,3vw,22px)", fontWeight:"700", color:"#0F172A", lineHeight:"1.5", marginBottom:"10px" }}>さらに詳しいアドバイスを<br/>LINEで受け取りませんか？</h3>
+            <p style={{ fontSize:"13px", lineHeight:"1.9", color:"#64748B", marginBottom:"24px" }}>
+              あなたの診断結果をもとに<br/>
+              個別の発信戦略をアドバイスします。
+            </p>
+            <button style={{ width:"100%", maxWidth:"380px", display:"flex", alignItems:"center", justifyContent:"center", gap:"10px", background:"#06C755", color:"#fff", fontFamily:"'Noto Sans JP',sans-serif", fontSize:"15px", fontWeight:"700", letterSpacing:"0.02em", border:"none", borderRadius:"12px", padding:"16px 24px", cursor:"pointer", transition:"background 0.2s, transform 0.15s, box-shadow 0.2s", boxShadow:"0 2px 8px rgba(6,199,85,0.25)", margin:"0 auto" }}
+              onClick={() => {
+                const params = new URLSearchParams({
+                  type: data.kanji,
+                  source: 'consultation',
+                  name: regName,
+                  email: regEmail,
+                  biz: regBiz
+                });
+                window.open(LIFF_URL + '?' + params.toString(), '_blank');
+              }}
+              onMouseOver={e=>{e.currentTarget.style.background="#05B34C";e.currentTarget.style.transform="translateY(-1px)";}}
+              onMouseOut={e=>{e.currentTarget.style.background="#06C755";e.currentTarget.style.transform="translateY(0)";}}>
+              <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" style={{width:"20px",height:"20px",flexShrink:0}}>
+                <path d="M12 2C6.48 2 2 6.05 2 11.07c0 4.46 3.61 8.19 8.49 8.87.33.07.78.22.89.5.1.26.07.66.03.93l-.14.87c-.04.26-.2 1.03.9.56 1.11-.47 5.96-3.5 8.13-6 1.5-1.64 2.22-3.31 2.22-5.13C22.52 6.05 18.04 2 12 2z"/>
+              </svg>
+              LINEで無料相談してみる
+            </button>
+            <p style={{ fontSize:"11px", color:"#94A3B8", marginTop:"12px" }}>無理な勧誘は一切ありません</p>
+          </div>
+          )}
 
           {/* Actions */}
           <div style={{ display:"flex", gap:"10px", flexWrap:"wrap", justifyContent:"center" }}>
