@@ -721,6 +721,7 @@ export default function EditScoreDiagnostic() {
               onClick={() => {
                 const params = new URLSearchParams({
                   type: data.kanji,
+                  typeCode: code,
                   source: 'consultation',
                   name: regName,
                   email: regEmail,

@@ -431,11 +431,12 @@
   // ================================================================
   async function main() {
     // Read URL parameters from diagnostic tool
-    typeCode   = getParam('type')   || '';
-    sourcePath = getParam('source') || 'diagnosis';
-    userName   = getParam('name')   || '';
-    userEmail  = getParam('email')  || '';
-    userBiz    = getParam('biz')    || '';
+    typeCode   = getParam('type')     || '';
+    var typeCodeId = getParam('typeCode') || '';
+    sourcePath = getParam('source')  || 'diagnosis';
+    userName   = getParam('name')    || '';
+    userEmail  = getParam('email')   || '';
+    userBiz    = getParam('biz')     || '';
 
     // Update type badge
     const typeEl = document.getElementById('type-label');
@@ -484,6 +485,7 @@
 
     const payload = {
       type:       typeCode,
+      typeCode:   typeCodeId,
       source:     sourcePath,
       name:       userName,
       email:      userEmail,
