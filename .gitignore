@@ -1,3 +1,5 @@
 node_modules
 dist
 .vercel
+NotoSansJP.ttf
+generate_pdfs.py
